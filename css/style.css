@@ -81,13 +81,14 @@ body {
     margin-right: 10px;
     position: fixed;
   }
-  .cart-main { */
+  /* .cart-main {
 
     padding-right: 10px;
-}
+} */
 @media only screen and (max-width: 468px) {
   #all-products {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
   }
+}
 }
