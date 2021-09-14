@@ -23,7 +23,7 @@ const showProducts = (products) => {
             <p>Category: ${product.category}</p>
             <div>
             <p> <i style="color: orange;" class="fas fa-star"></i>  <i style="color: orange;" class="fas fa-star"></i> <i style="color: orange;" class="fas fa-star"></i> <i style="color: orange;" class="fas fa-star-half-alt"></i> <i class="far fa-star"></i></p>
-                <h6 class ="">Rating Count: ${product.rating.count}<br>Average Rating: ${product.rating.rate}</h6>
+                <h6 class ="">Total Rating Count: ${product.rating.count}<br>Average Rating: ${product.rating.rate}</h6>
                 <h6>Price: $ ${product.price}</h6>
                 <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">Add to cart</button>
                 <button id="details-btn" onclick="showDetails(${product.id})" class="btn btn-danger">Details</button>
@@ -41,7 +41,6 @@ const addToCart = (id, price) => {
   updatePrice("price", price);
 
   updateTaxAndCharge();
-  updateTotal();
 
   document.getElementById("total-Products").innerText = count;
 };
@@ -58,7 +57,7 @@ const updatePrice = (id, value) => {
   const convertedOldPrice = getInputValue(id);
   const convertPrice = parseFloat(value);
   const total = convertedOldPrice + convertPrice;
-  console.log(total);
+  // console.log(total);
   document.getElementById(id).innerText = total.toFixed(2);
 };
 
@@ -71,6 +70,7 @@ const setInnerText = (id, value) => {
 };
 
 // update delivery charge and total Tax
+
 const updateTaxAndCharge = () => {
   const priceConverted = getInputValue("price");
   if (priceConverted > 200) {
@@ -86,18 +86,22 @@ const updateTaxAndCharge = () => {
     setInnerText("total-tax", priceConverted * 0.4);
   }
 
+  // Update-Total-Function-Call
+
+  updateTotal();
+
 };
 
 
 const showDetails = (id) => {
   var details_modal = new bootstrap.Modal(document.getElementById('modal-id'));
-  
-  fetch('https://fakestoreapi.com/products/'+id)
-          .then(res=>res.json())
-          .then(json=>{
-              // console.log(json);
-              product = json;
-              let content = `
+
+  fetch('https://fakestoreapi.com/products/' + id)
+    .then(res => res.json())
+    .then(json => {
+      // console.log(json);
+      product = json;
+      let content = `
                   <div class="col-md-4">
                       <img src="${product.image}" class="img-fluid img-thumbnail" alt="product image">
                   </div>
@@ -119,33 +123,22 @@ const showDetails = (id) => {
                                   <td style="width: 2px;">:</td>
                                   <td>${product.description}</td>
                               </tr>
+                              <tr>
+                                  <th>Ratings</th>
+                                  <td style="width: 2px;">:</td>
+                                  <td>Rating Count=> ${product.rating.count}<br>Average Rating=> ${product.rating.rate}</td>
+                              </tr>
                           </table>
                       </div>
                   </div>
               `;
-              document.getElementById('product-details').innerHTML = content;
-              details_modal.show();
-          })
+      document.getElementById('product-details').innerHTML = content;
+      details_modal.show();
+    })
 }
 
-// const showDetails = (image,price) => {
-//   var myModal = new bootstrap.Modal(document.getElementById('modal-id'))
-//   myModal.show()
-//   const productDetails = document.getElementById('product-details');
-//   productDetails.innerHTML =`
-//   <div class="row">
-//   <div class="col">
-//       <h1>${image}</h1>
-//   </div>
-//   <div class="col">
-//       <h1>${price}</h1>
-//   </div>
-// </div>
-//   `
-//   console.log("hello");
-// }
+//grandTotal-update-function
 
-//grandTotal update function
 const updateTotal = () => {
   const grandTotal =
     getInputValue("price") + getInputValue("delivery-charge") +
